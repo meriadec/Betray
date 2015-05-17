@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "css-loader": "^0.12.1",
+    "gsap": "^1.16.1",
     "lodash": "^3.8.0",
     "style-loader": "^0.12.2"
   }
