@@ -78,21 +78,30 @@ export default class Camera {
     }
   }
 
+  drawEnemies (ctx, point) {
+    this.game.enemies.forEach(e => { if (this.contains(e)) { e.render(ctx, point); } });
+  }
+
   render () {
+
+    var ctx = this.graphic.getCtx();
+    var point = { x: this.x, y: this.y };
 
     // clear all
     this.graphic.clear();
 
+    this.game.currentPlayer.render(ctx, point);
+
+    //ctx.globalCompositeOperation = 'source-atop';
+    // draw enemies
+    this.drawEnemies(ctx, point);
+    //ctx.globalCompositeOperation = 'source-over';
+
     // draw a nice grid
     this.drawGrid();
 
-    // render objects
-    var point = { x: this.x, y: this.y };
-    this.game.eachObject(o => {
-      if (this.contains(o)) {
-        o.render(this.graphic.getCtx(), point);
-      }
-    });
+    this.game.blocks.forEach(b => { if (this.contains(b)) { b.render(ctx, point); } });
+
   }
 
 }

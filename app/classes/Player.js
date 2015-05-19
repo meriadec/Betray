@@ -4,7 +4,7 @@ import Geometry from './Geometry';
 
 export default class Player {
 
-  constructor (game, addKeyboardsEvents) {
+  constructor (game, isPlayer) {
     console.log('>>> Created a new player');
     this.game = game;
     this.hp = 100;
@@ -17,7 +17,11 @@ export default class Player {
     this.maxSpeed = 150;
     this.speed = 0;
     this.speedV = 0;
-    if (addKeyboardsEvents) { this.addKeyboardsEvents(); }
+    this.isPlayer = !!isPlayer;
+
+    if (this.isPlayer) {
+      this.addKeyboardsEvents();
+    }
   }
 
   addKeyboardsEvents () {
@@ -91,7 +95,7 @@ export default class Player {
 
   drawShip (ctx, origin) {
     ctx.save();
-    ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+    ctx.fillStyle = 'rgb(255, 0, 0)';
     ctx.translate(origin.x, origin.y);
     ctx.rotate(this.rotation);
     ctx.beginPath();
@@ -104,18 +108,12 @@ export default class Player {
     ctx.restore();
   }
 
-  drawRay (ctx, x1, y1, x2, y2) {
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-  }
-
-  drawHalo (ctx, origin, relative) {
+  drawHalo (ctx, relative) {
     ctx.save();
     ctx.strokeStyle = 'rgba(0, 255, 255, 1)';
 
     var intersects = Geometry.getSightPolygon(this.x, this.y, this.game);
-
-    Geometry.drawPolygon(ctx, relative, intersects, 'rgba(255, 255, 255, 0.1)');
+    Geometry.drawPolygon(ctx, relative, intersects, '#827F2B');
 
     ctx.restore();
   }
@@ -127,11 +125,14 @@ export default class Player {
       y: this.y - relative.y
     };
 
+    // drawing vision halo
+    if (this.isPlayer) {
+      //ctx.globalCompositeOperation = 'sou';
+      this.drawHalo(ctx, relative);
+    }
+
     // drawing ship
     this.drawShip(ctx, coords);
-
-    // drawing vision halo
-    this.drawHalo(ctx, coords, relative);
 
   }
 

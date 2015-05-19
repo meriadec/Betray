@@ -20,7 +20,7 @@ export default class Game {
 
     // Players
     this.currentPlayer = new Player(this, true);
-    this.players = [this.currentPlayer];
+    this.enemies = [new Player(this)];
 
     // Obstacles
     this.blocks = [];
@@ -33,7 +33,7 @@ export default class Game {
   }
 
   eachObject (cb) {
-    var allObjects = Array.prototype.concat.call([], this.players, this.blocks);
+    var allObjects = Array.prototype.concat.call([], this.enemies, this.blocks);
     allObjects.forEach(o => cb(o));
   }
 
@@ -65,6 +65,7 @@ export default class Game {
   }
 
   update (dt) {
+    this.currentPlayer.update(dt);
     this.eachObject(o => o.update(dt));
     this.camera.update(dt);
     this.ui.update();
