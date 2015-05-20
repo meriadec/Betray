@@ -127,7 +127,6 @@ export default class Player {
 
     // drawing vision halo
     if (this.isPlayer) {
-      //ctx.globalCompositeOperation = 'sou';
       this.drawHalo(ctx, relative);
     }
 

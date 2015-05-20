@@ -92,10 +92,11 @@ export default class Camera {
 
     this.game.currentPlayer.render(ctx, point);
 
-    //ctx.globalCompositeOperation = 'source-atop';
+    ctx.globalCompositeOperation = 'source-atop';
+
     // draw enemies
     this.drawEnemies(ctx, point);
-    //ctx.globalCompositeOperation = 'source-over';
+    ctx.globalCompositeOperation = 'source-over';
 
     // draw a nice grid
     this.drawGrid();
