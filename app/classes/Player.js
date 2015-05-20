@@ -8,8 +8,8 @@ export default class Player {
     console.log('>>> Created a new player');
     this.game = game;
     this.hp = 100;
-    this.x = 2795;
-    this.y = 349;
+    this.x = 1450;
+    this.y = 500;
     this.color = 'red';
     this.size = 30;
     this.rotation = 0;
@@ -112,7 +112,7 @@ export default class Player {
     ctx.save();
     ctx.strokeStyle = 'rgba(0, 255, 255, 1)';
 
-    var intersects = Geometry.getSightPolygon(this.x, this.y, this.game);
+    var intersects = Geometry.getSightPolygon(this.x, this.y, this.game.points, this.game.segments);
     Geometry.drawPolygon(ctx, relative, intersects, '#827F2B');
 
     ctx.restore();

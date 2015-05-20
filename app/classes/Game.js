@@ -1,4 +1,5 @@
 import Camera from './Camera';
+import Geometry from './Geometry';
 import Player from './Player';
 import Block  from './Block';
 import Ui     from './Ui';
@@ -9,8 +10,8 @@ export default class Game {
     console.log('>>> Created a new game');
 
     // Map dimensions
-    this.w = 3000;
-    this.h = 2000;
+    this.w = 1500;
+    this.h = 1000;
 
     // Camera
     this.camera = new Camera(this);
@@ -25,6 +26,10 @@ export default class Game {
     // Obstacles
     this.blocks = [];
 
+    // Halo utils
+    this.segments = [];
+    this.points = [];
+
     // Map
     this.map = [];
 
@@ -37,15 +42,21 @@ export default class Game {
     allObjects.forEach(o => cb(o));
   }
 
+  createPoints () {
+    this.segments = Geometry.getSegments(this.w, this.h, this.blocks);
+    this.points = Geometry.getPoints(this.segments);
+  }
+
   generateBlocks () {
-    for (let i = 0; i < 100; ++i) {
+    for (let i = 0; i < 50; ++i) {
       this.blocks.push(new Block({
-        x: Math.floor(Math.random() * (this.w - 700)) + 300,
+        x: Math.floor(Math.random() * (this.w - 300)) + 100,
         y: Math.floor(Math.random() * this.h),
         w: Math.random() * 100 + 50,
         h: Math.random() * 100 + 50
       }));
     }
+    this.createPoints();
   }
 
   setMap (map) {
@@ -62,6 +73,7 @@ export default class Game {
         }
       })
     });
+    this.createPoints();
   }
 
   update (dt) {

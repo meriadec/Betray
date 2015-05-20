@@ -1,5 +1,49 @@
 export default class Geometry {
 
+  static getSegments (width, height, blocks) {
+    var segments = [];
+
+    segments.push({ a: { x: 0, y: 0 }, b: { x: width, y: 0 } });
+    segments.push({ a: { x: width, y: 0 }, b: { x: width, y: height } });
+    segments.push({ a: { x: width, y: height }, b: { x: 0, y: height } });
+    segments.push({ a: { x: 0, y: height }, b: { x: 0, y: 0 } });
+
+    blocks.forEach(b => {
+      segments.push({ a: { x: b.x, y: b.y }, b: { x: b.x + b.w, y: b.y } });
+      segments.push({ a: { x: b.x + b.w, y: b.y }, b: { x: b.x + b.w, y: b.y + b.h } });
+      segments.push({ a: { x: b.x + b.w, y: b.y + b.h }, b: { x: b.x, y: b.y + b.h } });
+      segments.push({ a: { x: b.x, y: b.y + b.h }, b: { x: b.x, y: b.y } });
+    });
+
+    return segments;
+  }
+
+  static getPoints (segments) {
+
+    // Get all unique points
+    var points = (function (segments) {
+      var a = [];
+      segments.forEach(function (seg) {
+        a.push(seg.a, seg.b);
+      });
+      return a;
+    })(segments);
+
+    return (function (points) {
+      var set = {};
+      return points.filter(function (p) {
+        var key = p.x + ',' + p.y;
+        if (key in set) {
+          return false;
+        }
+        else {
+          set[key] = true;
+          return true;
+        }
+      });
+    })(points);
+  }
+
   // Find intersection of RAY & SEGMENT
   static getIntersection (ray, segment) {
 
@@ -44,44 +88,7 @@ export default class Geometry {
 
   }
 
-  static getSightPolygon (sightX, sightY, game) {
-
-    var segments = [];
-
-    segments.push({ a: { x: 0, y: 0 }, b: { x: game.w, y: 0 } });
-    segments.push({ a: { x: game.w, y: 0 }, b: { x: game.w, y: game.h } });
-    segments.push({ a: { x: game.w, y: game.h }, b: { x: 0, y: game.h } });
-    segments.push({ a: { x: 0, y: game.h }, b: { x: 0, y: 0 } });
-
-    game.blocks.forEach(b => {
-      segments.push({ a: { x: b.x, y: b.y }, b: { x: b.x + b.w, y: b.y } });
-      segments.push({ a: { x: b.x + b.w, y: b.y }, b: { x: b.x + b.w, y: b.y + b.h } });
-      segments.push({ a: { x: b.x + b.w, y: b.y + b.h }, b: { x: b.x, y: b.y + b.h } });
-      segments.push({ a: { x: b.x, y: b.y + b.h }, b: { x: b.x, y: b.y } });
-    });
-
-    // Get all unique points
-    var points = (function (segments) {
-      var a = [];
-      segments.forEach(function (seg) {
-        a.push(seg.a, seg.b);
-      });
-      return a;
-    })(segments);
-
-    var uniquePoints = (function (points) {
-      var set = {};
-      return points.filter(function (p) {
-        var key = p.x + ',' + p.y;
-        if (key in set) {
-          return false;
-        }
-        else {
-          set[key] = true;
-          return true;
-        }
-      });
-    })(points);
+  static getSightPolygon (sightX, sightY, uniquePoints, segments) {
 
     // Get all angles
     var uniqueAngles = [];
